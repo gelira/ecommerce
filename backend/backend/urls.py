@@ -17,10 +17,13 @@ Including another URLconf
 from django.urls import path
 
 from acesso import views as acesso_views
+from estoque import views as estoque_views
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path('api/token', acesso_views.AccessTokenView.as_view()),
     path('api/cliente', acesso_views.CreateClienteView.as_view()),
     path('api/info', acesso_views.InfoView.as_view()),
+
+    path('api/loja', estoque_views.LojaView.as_view()),
 ]
