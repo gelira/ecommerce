@@ -21,5 +21,6 @@ from acesso import views as acesso_views
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path('api/token', acesso_views.AccessTokenView.as_view()),
-    path('api/cliente', acesso_views.CreateClienteView.as_view())
+    path('api/cliente', acesso_views.CreateClienteView.as_view()),
+    path('api/info', acesso_views.InfoView.as_view()),
 ]

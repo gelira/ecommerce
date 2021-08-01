@@ -44,3 +44,18 @@ class CreateClienteSerializer(serializers.Serializer):
         return {
             'token': str(token)
         }
+
+class InfoSerializer(serializers.ModelSerializer):
+    nome = serializers.SerializerMethodField()
+
+    def get_nome(self, obj):
+        return obj.first_name
+
+    class Meta:
+        model = Usuario
+        fields = [
+            'id',
+            'nome',
+            'email',
+            'role'
+        ]
