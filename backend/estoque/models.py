@@ -11,7 +11,8 @@ class Loja(models.Model):
         max_length=100
     )
     nome_url = models.CharField(
-        max_length=100
+        max_length=100,
+        unique=True
     )
 
 class Produto(models.Model):
