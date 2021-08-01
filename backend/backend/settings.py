@@ -152,3 +152,5 @@ SIMPLE_JWT = {
         'JWT'
     ],
 }
+
+AUTH_USER_MODEL = 'acesso.Usuario'
