@@ -2,14 +2,17 @@ from rest_framework.views import (
     APIView, 
     Response
 )
+from rest_framework.parsers import MultiPartParser
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.exceptions import MethodNotAllowed
+from rest_framework.decorators import action
 
 from estoque.models import (
     Loja, 
     Produto
 )
 from estoque.serializers import (
+    FotoProdutoSerializer,
     LojaSerializer, 
     ProdutoSerializer
 )
@@ -49,6 +52,16 @@ class ProdutoViewSet(ModelViewSet):
         qs = qs.filter(loja_id=loja_id)
 
         return qs
+
+    @action(methods=['put'], detail=True, url_path='foto', parser_classes=[MultiPartParser])
+    def foto_produto(self, request, pk=None):
+        produto = self.get_object()
+        
+        ser = FotoProdutoSerializer(produto, data=request.data)
+        ser.is_valid(raise_exception=True)
+        ser.save()
+        
+        return Response()
 
     def destroy(self, request, *args, **kwargs):
         raise MethodNotAllowed(request.method)
