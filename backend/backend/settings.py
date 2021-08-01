@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'acesso',
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -150,4 +151,7 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': [
         'JWT'
     ],
+    'UPDATE_LAST_LOGIN': True,
 }
+
+AUTH_USER_MODEL = 'acesso.Usuario'
