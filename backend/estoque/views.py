@@ -2,9 +2,18 @@ from rest_framework.views import (
     APIView, 
     Response
 )
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.exceptions import MethodNotAllowed
 
-from estoque.models import Loja
-from estoque.serializers import LojaSerializer
+from estoque.models import (
+    Loja, 
+    Produto
+)
+from estoque.serializers import (
+    LojaSerializer, 
+    ProdutoSerializer
+)
+from estoque.exceptions import LojaNaoInformadaException
 
 class LojaView(APIView):
     def get(self, request):
@@ -26,3 +35,20 @@ class LojaView(APIView):
 
         ser = LojaSerializer(loja)
         return Response(data=ser.data)
+
+class ProdutoViewSet(ModelViewSet):
+    serializer_class = ProdutoSerializer
+
+    def get_queryset(self):
+        qs = Produto.objects.all()
+        
+        loja_id = self.request.GET.get('loja_id')
+        if loja_id is None:
+            raise LojaNaoInformadaException()
+            
+        qs = qs.filter(loja_id=loja_id)
+
+        return qs
+
+    def destroy(self, request, *args, **kwargs):
+        raise MethodNotAllowed(request.method)
