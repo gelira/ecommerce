@@ -8,7 +8,7 @@ from estoque.serializers import LojaSerializer
 
 class LojaView(APIView):
     def get(self, request):
-        loja_id = request.GET.get('id')
+        loja_id = request.GET.get('loja_id')
         nome_url = request.GET.get('nome_url')
 
         if not loja_id and not nome_url:
