@@ -151,6 +151,7 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': [
         'JWT'
     ],
+    'UPDATE_LAST_LOGIN': True,
 }
 
 AUTH_USER_MODEL = 'acesso.Usuario'

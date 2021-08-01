@@ -1,3 +1,5 @@
-from django.shortcuts import render
+from rest_framework_simplejwt.views import TokenViewBase
+from acesso.serializers import AccesTokenSerializer
 
-# Create your views here.
+class AccessTokenView(TokenViewBase):
+    serializer_class = AccesTokenSerializer
