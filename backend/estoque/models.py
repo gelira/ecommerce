@@ -29,6 +29,9 @@ class Produto(models.Model):
     )
     preco = models.FloatField()
 
+    class Meta:
+        ordering = ['nome']
+
 class Foto(models.Model):
     produto = models.OneToOneField(
         to=Produto,
