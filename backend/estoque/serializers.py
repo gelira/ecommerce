@@ -18,6 +18,15 @@ class LojaSerializer(serializers.ModelSerializer):
         ]
 
 class ProdutoSerializer(serializers.ModelSerializer):
+    foto = serializers.SerializerMethodField(
+        read_only=True
+    )
+    
+    def get_foto(self, obj):
+        if not hasattr(obj, 'foto'):
+            return ''
+        return obj.foto.get_url()
+
     def validate_loja(self, value):
         if self.instance and self.instance.loja != value:
             raise serializers.ValidationError('Campo não editável')
@@ -25,7 +34,14 @@ class ProdutoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Produto
-        fields = '__all__'
+        fields = [
+            'id',
+            'nome',
+            'descricao',
+            'preco',
+            'loja',
+            'foto'
+        ]
 
 class FotoProdutoSerializer(serializers.Serializer):
     foto = serializers.ImageField(

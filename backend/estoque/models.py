@@ -44,6 +44,13 @@ class Foto(models.Model):
         max_length=100
     )
 
+    def get_url(self):
+        url = f'https://{self.bucket}.s3.{self.region}.amazonaws.com/{self.key}'
+        versao = self.versoes.filter(atual=True).first()
+        if versao:
+            url = f'{url}?versionId={versao.version_id}'
+        return url
+
 class Versao(models.Model):
     foto = models.ForeignKey(
         to=Foto,
