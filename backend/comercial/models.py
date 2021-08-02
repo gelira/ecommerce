@@ -18,7 +18,9 @@ class Compra(models.Model):
         on_delete=models.PROTECT,
         related_name='compras'
     )
-    total = models.FloatField()
+    total = models.FloatField(
+        default=0
+    )
     status = models.CharField(
         choices=STATUS,
         default='nova',
