@@ -15,12 +15,19 @@ Including another URLconf
 """
 # from django.contrib import admin
 from django.urls import path
+from rest_framework.routers import SimpleRouter
 
 from acesso import views as acesso_views
+from estoque import views as estoque_views
+
+router = SimpleRouter(trailing_slash=False)
+router.register('api/produtos', estoque_views.ProdutoViewSet, basename='produtos')
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path('api/token', acesso_views.AccessTokenView.as_view()),
     path('api/cliente', acesso_views.CreateClienteView.as_view()),
     path('api/info', acesso_views.InfoView.as_view()),
-]
+
+    path('api/loja', estoque_views.LojaView.as_view()),
+] + router.urls
