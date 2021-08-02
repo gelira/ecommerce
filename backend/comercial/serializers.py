@@ -4,7 +4,7 @@ from django.db import transaction
 
 from comercial.models import Item, Compra
 
-class ItemSerializer(serializers.ModelSerializer):
+class ItemCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
         fields = [
@@ -14,7 +14,7 @@ class ItemSerializer(serializers.ModelSerializer):
 
 class CompraCreateSerializer(serializers.ModelSerializer):
     itens = serializers.ListField(
-        child=ItemSerializer(),
+        child=ItemCreateSerializer(),
         allow_empty=False,
         write_only=True
     )
