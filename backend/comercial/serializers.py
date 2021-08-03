@@ -27,8 +27,7 @@ class ItemRetrieveSerializer(serializers.ModelSerializer):
         fields = [
             'produto',
             'quantidade',
-            'preco',
-            'version_id'
+            'preco'
         ]
 
 class CompraCreateSerializer(serializers.ModelSerializer):
@@ -88,8 +87,7 @@ class CompraCreateSerializer(serializers.ModelSerializer):
                     produto=i['produto'],
                     compra=compra,
                     quantidade=i['quantidade'],
-                    preco=i['produto'].preco,
-                    version_id=i['produto'].get_versao_atual()
+                    preco=i['produto'].preco
                 )
 
                 total += (i['quantidade']  * i['produto'].preco)
