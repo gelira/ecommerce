@@ -46,7 +46,3 @@ class Item(models.Model):
     )
     quantidade = models.IntegerField()
     preco = models.FloatField()
-    version_id = models.CharField(
-        max_length=100,
-        blank=True
-    )
