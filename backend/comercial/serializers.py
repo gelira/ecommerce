@@ -12,6 +12,25 @@ class ItemCreateSerializer(serializers.ModelSerializer):
             'quantidade'
         ]
 
+class ItemRetrieveSerializer(serializers.ModelSerializer):
+    produto = serializers.SerializerMethodField()
+
+    def get_produto(self, obj):
+        return {
+            'id': obj.produto.id,
+            'nome': obj.produto.nome,
+            'descricao': obj.produto.descricao
+        }
+
+    class Meta:
+        model = Item
+        fields = [
+            'produto',
+            'quantidade',
+            'preco',
+            'version_id'
+        ]
+
 class CompraCreateSerializer(serializers.ModelSerializer):
     itens = serializers.ListField(
         child=ItemCreateSerializer(),
@@ -101,3 +120,35 @@ class CompraCreateSerializer(serializers.ModelSerializer):
                 'read_only': True
             }
         }
+
+class CompraRetrieveSerializer(serializers.ModelSerializer):
+    itens = serializers.SerializerMethodField()
+    cliente = serializers.SerializerMethodField()
+
+    def get_cliente(self, obj):
+        return {
+            'id': obj.cliente.id,
+            'nome': obj.cliente.first_name,
+            'email': obj.cliente.email
+        }
+
+    def get_itens(self, obj):
+        itens = []
+        
+        for item in obj.itens.all():
+            ser = ItemRetrieveSerializer(item)
+            itens.append(ser.data)
+        
+        return itens
+
+    class Meta:
+        model = Compra
+        fields = [
+            'id',
+            'loja',
+            'cliente',
+            'total',
+            'status',
+            'data',
+            'itens'
+        ]
