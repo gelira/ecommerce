@@ -1,6 +1,7 @@
 from django.db import models
 
 STATUS = [
+    ('cancelada', 'Cancelada'),
     ('nova', 'Nova compra'),
     ('separacao', 'Separação'),
     ('transito', 'Em trânsito'),
