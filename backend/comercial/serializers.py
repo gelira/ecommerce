@@ -151,3 +151,15 @@ class CompraRetrieveSerializer(serializers.ModelSerializer):
             'data',
             'itens'
         ]
+
+class CompraUpdateSerializer(serializers.ModelSerializer):
+    def validate_status(self, value):
+        if self.instance.status != 'nova' and value == 'cancelada':
+            raise serializers.ValidationError('Compra não pode mais ser cancelada')
+        return value
+
+    class Meta:
+        model = Compra
+        fields = [
+            'status'
+        ]
