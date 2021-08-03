@@ -40,7 +40,12 @@ class Produto(models.Model):
         return versao.version_id
 
     def get_foto_url(self):
-        url = f'https://{self.bucket}.s3.{self.region}.amazonaws.com/{self.key}'
+        if not hasattr(self, 'foto'):
+            return ''
+
+        f = self.foto
+
+        url = f'https://{f.bucket}.s3.{f.region}.amazonaws.com/{f.key}'
         
         version_id = self.get_versao_atual()
         if version_id:
