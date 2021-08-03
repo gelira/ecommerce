@@ -39,13 +39,12 @@ class Produto(models.Model):
 
         return versao.version_id
 
-    def get_foto_url(self, versao=True):
+    def get_foto_url(self):
         url = f'https://{self.bucket}.s3.{self.region}.amazonaws.com/{self.key}'
         
-        if versao:
-            version_id = self.get_versao_atual()
-            if version_id:
-                url = f'{url}?versionId={version_id}'
+        version_id = self.get_versao_atual()
+        if version_id:
+            url = f'{url}?versionId={version_id}'
         
         return url
 
