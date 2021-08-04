@@ -16,7 +16,6 @@ from estoque.serializers import (
     LojaSerializer, 
     ProdutoSerializer
 )
-from estoque.exceptions import LojaNaoInformadaException
 
 class LojaView(APIView):
     def get(self, request):
@@ -43,15 +42,7 @@ class ProdutoViewSet(ModelViewSet):
     serializer_class = ProdutoSerializer
 
     def get_queryset(self):
-        qs = Produto.objects.all()
-        
-        loja_id = self.request.GET.get('loja_id')
-        if loja_id is None:
-            raise LojaNaoInformadaException()
-            
-        qs = qs.filter(loja_id=loja_id)
-
-        return qs
+        return Produto.objects.filter(loja_id=self.request.GET['loja_id']).all()
 
     @action(methods=['put'], detail=True, url_path='foto', parser_classes=[MultiPartParser])
     def foto_produto(self, request, pk=None):
