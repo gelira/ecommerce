@@ -16,6 +16,7 @@ from estoque.serializers import (
     LojaSerializer, 
     ProdutoSerializer
 )
+from shared.permissions import DonoLojaPermission
 
 class LojaView(APIView):
     def get(self, request):
@@ -44,6 +45,14 @@ class ProdutoViewSet(ModelViewSet):
     def get_queryset(self):
         return Produto.objects.filter(loja_id=self.request.GET['loja_id']).all()
 
+    def get_permissions(self):
+        permissions = super().get_permissions()
+
+        if self.action not in ['list', 'retrieve']:
+            permissions.append(DonoLojaPermission())
+        
+        return permissions
+
     @action(methods=['put'], detail=True, url_path='foto', parser_classes=[MultiPartParser])
     def foto_produto(self, request, pk=None):
         produto = self.get_object()
@@ -52,7 +61,7 @@ class ProdutoViewSet(ModelViewSet):
         ser.is_valid(raise_exception=True)
         ser.save()
         
-        return Response()
+        return Response(status=204)
 
     def destroy(self, request, *args, **kwargs):
         raise MethodNotAllowed(request.method)
