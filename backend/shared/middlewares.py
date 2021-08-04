@@ -3,7 +3,8 @@ from django.http.response import JsonResponse
 ALLOW_URLS = [
     '/api/token',
     '/api/cliente',
-    '/api/info'
+    '/api/info',
+    '/api/loja',
 ]
 
 class LojaIdMiddleware:
