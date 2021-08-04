@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     'acesso',
     'estoque',
     'comercial',
+    'shared',
+
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
