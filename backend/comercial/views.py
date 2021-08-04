@@ -1,7 +1,6 @@
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.viewsets import ModelViewSet
 from comercial.models import Compra
-from comercial.exceptions import LojaNaoInformadaException
 from comercial.serializers import (
     CompraCreateSerializer, 
     CompraRetrieveSerializer,
@@ -10,12 +9,12 @@ from comercial.serializers import (
 
 class CompraViewSet(ModelViewSet):
     def get_queryset(self):
-        loja_id = self.request.GET.get('loja_id')
+        qs = Compra.objects.filter(loja_id=self.request.GET['loja_id'])
         
-        if not loja_id:
-            raise LojaNaoInformadaException()
-
-        return Compra.objects.filter(loja_id=loja_id).all()
+        if self.request.user.role != 'dono':
+            qs = qs.filter(cliente_id=self.request.user.id)
+        
+        return qs.all()
 
     def get_serializer_class(self):
         if self.action == 'create':
