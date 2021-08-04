@@ -19,9 +19,11 @@ from rest_framework.routers import SimpleRouter
 
 from acesso import views as acesso_views
 from estoque import views as estoque_views
+from comercial import views as comercial_views
 
 router = SimpleRouter(trailing_slash=False)
 router.register('api/produtos', estoque_views.ProdutoViewSet, basename='produtos')
+router.register('api/compras', comercial_views.CompraViewSet, basename='compras')
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
