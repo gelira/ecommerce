@@ -26,8 +26,9 @@ class ProdutoSerializer(serializers.ModelSerializer):
         return obj.get_foto_url()
 
     def validate_loja(self, value):
-        if self.instance and self.instance.loja != value:
-            raise serializers.ValidationError('Campo não editável')
+        if self.instance:
+            if self.instance.loja != value:
+                raise serializers.ValidationError('Campo não editável')
         return value
 
     class Meta:
