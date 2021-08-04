@@ -102,6 +102,7 @@ class CompraCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Compra
         fields = [
+            'id',
             'loja',
             'cliente',
             'total',
@@ -110,6 +111,9 @@ class CompraCreateSerializer(serializers.ModelSerializer):
             'itens'
         ]
         extra_kwargs = {
+            'id': {
+                'read_only': True
+            },
             'total': {
                 'read_only': True
             },
