@@ -1,21 +1,21 @@
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.viewsets import ModelViewSet
 from comercial.models import Compra
-from comercial.exceptions import LojaNaoInformadaException
 from comercial.serializers import (
     CompraCreateSerializer, 
     CompraRetrieveSerializer,
     CompraUpdateSerializer
 )
+from shared.permissions import DonoLojaPermission
 
 class CompraViewSet(ModelViewSet):
     def get_queryset(self):
-        loja_id = self.request.GET.get('loja_id')
+        qs = Compra.objects.filter(loja_id=self.request.GET['loja_id'])
         
-        if not loja_id:
-            raise LojaNaoInformadaException()
-
-        return Compra.objects.filter(loja_id=loja_id).all()
+        if not DonoLojaPermission().has_permission(self.request, self):
+            qs = qs.filter(cliente_id=self.request.user.id)
+        
+        return qs.all()
 
     def get_serializer_class(self):
         if self.action == 'create':
@@ -26,8 +26,9 @@ class CompraViewSet(ModelViewSet):
         
         return CompraRetrieveSerializer
 
-    def get_serializer_context(self):
-        return super().get_serializer_context()
+    def create(self, request, *args, **kwargs):
+        request.data['loja'] = request.GET['loja_id']
+        return super().create(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
         raise MethodNotAllowed(request.method)

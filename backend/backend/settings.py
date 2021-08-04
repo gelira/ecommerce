@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     'acesso',
     'estoque',
     'comercial',
+    'shared',
+
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -53,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'shared.middlewares.LojaIdMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'

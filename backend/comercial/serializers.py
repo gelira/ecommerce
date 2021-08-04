@@ -3,6 +3,7 @@ from rest_framework import serializers
 from django.db import transaction
 
 from comercial.models import Item, Compra
+from shared.permissions import DonoLojaPermission
 
 class ItemCreateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -91,7 +92,7 @@ class CompraCreateSerializer(serializers.ModelSerializer):
                     preco=i['produto'].preco
                 )
 
-                total += (i['quantidade']  * i['produto'].preco)
+                total += (i['quantidade'] * i['produto'].preco)
 
             compra.total = total
             compra.save()
@@ -101,6 +102,7 @@ class CompraCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Compra
         fields = [
+            'id',
             'loja',
             'cliente',
             'total',
@@ -109,6 +111,9 @@ class CompraCreateSerializer(serializers.ModelSerializer):
             'itens'
         ]
         extra_kwargs = {
+            'id': {
+                'read_only': True
+            },
             'total': {
                 'read_only': True
             },
@@ -154,8 +159,18 @@ class CompraRetrieveSerializer(serializers.ModelSerializer):
 
 class CompraUpdateSerializer(serializers.ModelSerializer):
     def validate_status(self, value):
-        if self.instance.status != 'nova' and value == 'cancelada':
+        request = self.context['request']
+        view = self.context['view']
+
+        if DonoLojaPermission().has_permission(request, view):
+            return value
+        
+        if value != 'cancelada':
+            raise serializers.ValidationError('Você não pode fazer essa ação')
+
+        if self.instance.status != 'nova':
             raise serializers.ValidationError('Compra não pode mais ser cancelada')
+        
         return value
 
     class Meta:
