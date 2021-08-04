@@ -63,5 +63,9 @@ class ProdutoViewSet(ModelViewSet):
         
         return Response(status=204)
 
+    def create(self, request, *args, **kwargs):
+        request.data['loja'] = request.GET['loja_id']
+        return super().create(request, *args, **kwargs)
+
     def destroy(self, request, *args, **kwargs):
         raise MethodNotAllowed(request.method)
