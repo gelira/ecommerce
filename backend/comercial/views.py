@@ -6,12 +6,13 @@ from comercial.serializers import (
     CompraRetrieveSerializer,
     CompraUpdateSerializer
 )
+from shared.permissions import DonoLojaPermission
 
 class CompraViewSet(ModelViewSet):
     def get_queryset(self):
         qs = Compra.objects.filter(loja_id=self.request.GET['loja_id'])
         
-        if self.request.user.role != 'dono':
+        if not DonoLojaPermission().has_permission(self.request, self):
             qs = qs.filter(cliente_id=self.request.user.id)
         
         return qs.all()
