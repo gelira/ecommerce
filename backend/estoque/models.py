@@ -29,6 +29,30 @@ class Produto(models.Model):
     )
     preco = models.FloatField()
 
+    def get_versao_atual(self):
+        if not hasattr(self, 'foto'):
+            return ''
+        
+        versao = self.foto.versoes.filter(atual=True).first()
+        if not versao:
+            return ''
+
+        return versao.version_id
+
+    def get_foto_url(self):
+        if not hasattr(self, 'foto'):
+            return ''
+
+        f = self.foto
+
+        url = f'https://{f.bucket}.s3.{f.region}.amazonaws.com/{f.key}'
+        
+        version_id = self.get_versao_atual()
+        if version_id:
+            url = f'{url}?versionId={version_id}'
+        
+        return url
+
     class Meta:
         ordering = ['nome']
 
@@ -46,13 +70,6 @@ class Foto(models.Model):
     key = models.CharField(
         max_length=100
     )
-
-    def get_url(self):
-        url = f'https://{self.bucket}.s3.{self.region}.amazonaws.com/{self.key}'
-        versao = self.versoes.filter(atual=True).first()
-        if versao:
-            url = f'{url}?versionId={versao.version_id}'
-        return url
 
 class Versao(models.Model):
     foto = models.ForeignKey(

@@ -23,9 +23,7 @@ class ProdutoSerializer(serializers.ModelSerializer):
     )
     
     def get_foto(self, obj):
-        if not hasattr(obj, 'foto'):
-            return ''
-        return obj.foto.get_url()
+        return obj.get_foto_url()
 
     def validate_loja(self, value):
         if self.instance and self.instance.loja != value:
