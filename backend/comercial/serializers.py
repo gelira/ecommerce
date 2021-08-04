@@ -3,6 +3,7 @@ from rest_framework import serializers
 from django.db import transaction
 
 from comercial.models import Item, Compra
+from shared.permissions import DonoLojaPermission
 
 class ItemCreateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -154,8 +155,18 @@ class CompraRetrieveSerializer(serializers.ModelSerializer):
 
 class CompraUpdateSerializer(serializers.ModelSerializer):
     def validate_status(self, value):
-        if self.instance.status != 'nova' and value == 'cancelada':
+        request = self.context['request']
+        view = self.context['view']
+
+        if DonoLojaPermission().has_permission(request, view):
+            return value
+        
+        if value != 'cancelada':
+            raise serializers.ValidationError('Você não pode fazer essa ação')
+
+        if self.instance.status != 'nova':
             raise serializers.ValidationError('Compra não pode mais ser cancelada')
+        
         return value
 
     class Meta:

@@ -26,8 +26,5 @@ class CompraViewSet(ModelViewSet):
         
         return CompraRetrieveSerializer
 
-    def get_serializer_context(self):
-        return super().get_serializer_context()
-
     def destroy(self, request, *args, **kwargs):
         raise MethodNotAllowed(request.method)
