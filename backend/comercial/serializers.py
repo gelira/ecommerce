@@ -92,7 +92,7 @@ class CompraCreateSerializer(serializers.ModelSerializer):
                     preco=i['produto'].preco
                 )
 
-                total += (i['quantidade']  * i['produto'].preco)
+                total += (i['quantidade'] * i['produto'].preco)
 
             compra.total = total
             compra.save()
