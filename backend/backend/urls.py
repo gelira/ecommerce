@@ -30,6 +30,5 @@ urlpatterns = [
     path('api/token', acesso_views.AccessTokenView.as_view()),
     path('api/cliente', acesso_views.CreateClienteView.as_view()),
     path('api/info', acesso_views.InfoView.as_view()),
-
     path('api/loja', estoque_views.LojaView.as_view()),
 ] + router.urls
