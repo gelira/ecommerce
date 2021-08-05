@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { 
   Button,
   TextField, 
   Typography 
 } from '@material-ui/core';
+import { useDispatch } from 'react-redux';
+
+import { createClienteAsync } from '../store/acesso';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -23,11 +26,23 @@ const useStyles = makeStyles(theme => ({
 
 export default function Registro() {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const [nome, setNome] = useState('');
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+
+  const create = event => {
+    event.preventDefault();
+    dispatch(createClienteAsync({ nome, email, senha }));
+    setNome('');
+    setEmail('');
+    setSenha('');
+  };
 
   return (
     <div className={classes.paper}>
       <Typography component="h1" variant="h5">
-        Registre-se!
+        Cliente novo? Registre-se agora!
       </Typography>
       <form noValidate>
         <TextField
@@ -35,17 +50,19 @@ export default function Registro() {
           margin="normal"
           required
           fullWidth
-          id="nome"
           label="Nome"
           autoFocus
+          value={nome}
+          onChange={e => setNome(e.target.value)}
         />
         <TextField
           variant="outlined"
           margin="normal"
           required
           fullWidth
-          id="email"
           label="Email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
         />
         <TextField
           variant="outlined"
@@ -54,7 +71,8 @@ export default function Registro() {
           fullWidth
           label="Senha"
           type="password"
-          id="password"
+          value={senha}
+          onChange={e => setSenha(e.target.value)}
         />
         <Button
           type="submit"
@@ -62,6 +80,7 @@ export default function Registro() {
           variant="contained"
           color="primary"
           className={classes.submit}
+          onClick={create}
         >
           Registrar e Entrar
         </Button>
