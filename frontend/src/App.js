@@ -7,16 +7,16 @@ import {
   Toolbar,
   Typography,
   IconButton,
+  Badge
 } from '@material-ui/core';
-import {
-  AccountCircle
-} from '@material-ui/icons';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Switch,
   Route,
   useHistory
-} from "react-router-dom";
+} from 'react-router-dom';
 
 import { fetchLojaAsync } from './store/acesso';
 
@@ -78,6 +78,13 @@ export default function App() {
             >
               {nome_loja}
             </Typography>
+            <IconButton
+              color="inherit"
+            >
+              <Badge color="secondary" badgeContent={1}>
+                <ShoppingCartIcon />
+              </Badge>
+            </IconButton>
             {usuario_id && (
               <IconButton
                 color="inherit"
