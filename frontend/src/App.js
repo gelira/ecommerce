@@ -20,8 +20,9 @@ import {
 
 import { fetchLojaAsync } from './store/acesso';
 
-import Login from './components/Login';
-import Registro from './components/Registro';
+import Login from './pages/Login';
+import Registro from './pages/Registro';
+import Produtos from './pages/Produtos';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -32,7 +33,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function App() {
+export default function App() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -60,6 +61,10 @@ function App() {
       history.push('/login');
     }
   }, [usuario_id, role, history]);
+
+  useEffect(() => {
+    document.title = nome_loja;
+  }, [nome_loja]);
 
   return (
     <>
@@ -91,7 +96,7 @@ function App() {
               <Registro />
             </Route>
             <Route path="/produtos">
-              <h1>Produtos</h1>
+              <Produtos />
             </Route>
             <Route path="/compras">
               <h1>Compras</h1>
@@ -102,5 +107,3 @@ function App() {
     </>
   );
 }
-
-export default App;
