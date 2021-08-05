@@ -9,9 +9,12 @@ import {
 const useStyles = makeStyles(theme => ({
   paper: {
     marginTop: theme.spacing(8),
+    marginLeft: 'auto',
+    marginRight: 'auto',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    width: '50%'
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
