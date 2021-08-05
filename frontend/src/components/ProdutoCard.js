@@ -14,6 +14,8 @@ import {
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 
+import { produtoToUpdate } from '../store/estoque';
+
 const useStyles = makeStyles({
   root: {
     maxWidth: 345,
@@ -38,6 +40,8 @@ export default function ProdutoCard(props) {
   const cliente = useSelector(state => state.acesso.role === 'cliente');
 
   const [quantidade, setQuantidade] = useState(0);
+
+  const setProdutotoUpdate = id => dispatch(produtoToUpdate({ id }));
 
   return (
     <Card className={classes.root}>
@@ -64,7 +68,12 @@ export default function ProdutoCard(props) {
             </IconButton>
           </>
         ) : (
-          <Button color="primary">Editar produto</Button>
+          <Button 
+            color="primary"
+            onClick={() => setProdutotoUpdate(id)}
+          >
+            Editar produto
+          </Button>
         )}
       </CardActions>
     </Card>
