@@ -41,6 +41,7 @@ export default function App() {
   const nome_loja = useSelector(state => state.acesso.nome_loja);
   const usuario_id = useSelector(state => state.acesso.id);
   const role = useSelector(state => state.acesso.role);
+  const quantidadeItens = useSelector(state => state.comercial.quantidadeItens);
 
   useEffect(() => {
     const { host } = window.location;
@@ -66,6 +67,8 @@ export default function App() {
     document.title = nome_loja;
   }, [nome_loja]);
 
+  const exibirCarrinho = () => quantidadeItens > 0 && role === 'cliente';
+
   return (
     <>
       <CssBaseline />
@@ -78,13 +81,15 @@ export default function App() {
             >
               {nome_loja}
             </Typography>
-            <IconButton
-              color="inherit"
-            >
-              <Badge color="secondary" badgeContent={1}>
-                <ShoppingCartIcon />
-              </Badge>
-            </IconButton>
+            {exibirCarrinho() && (
+              <IconButton
+                color="inherit"
+              >
+                <Badge color="secondary" badgeContent={quantidadeItens}>
+                  <ShoppingCartIcon />
+                </Badge>
+              </IconButton>
+            )}
             {usuario_id && (
               <IconButton
                 color="inherit"
