@@ -20,9 +20,9 @@ import {
 
 import { fetchLojaAsync } from './store/acesso';
 
-import Login from './components/Login';
-import Registro from './components/Registro';
-import Produtos from './components/Produtos';
+import Login from './pages/Login';
+import Registro from './pages/Registro';
+import Produtos from './pages/Produtos';
 
 const useStyles = makeStyles(() => ({
   root: {
