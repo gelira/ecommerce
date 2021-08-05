@@ -22,6 +22,7 @@ import { fetchLojaAsync } from './store/acesso';
 
 import Login from './components/Login';
 import Registro from './components/Registro';
+import Produtos from './components/Produtos';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -32,7 +33,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function App() {
+export default function App() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -95,7 +96,7 @@ function App() {
               <Registro />
             </Route>
             <Route path="/produtos">
-              <h1>Produtos</h1>
+              <Produtos />
             </Route>
             <Route path="/compras">
               <h1>Compras</h1>
@@ -106,5 +107,3 @@ function App() {
     </>
   );
 }
-
-export default App;
