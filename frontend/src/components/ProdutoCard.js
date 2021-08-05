@@ -15,6 +15,7 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 
 import { produtoToUpdate, openProdutoForm } from '../store/estoque';
+import { setItem } from '../store/comercial';
 
 const useStyles = makeStyles({
   root: {
@@ -46,6 +47,18 @@ export default function ProdutoCard(props) {
     dispatch(openProdutoForm());
   };
 
+  const updateQuantidade = c => {
+    const s = quantidade + c;
+    if (s >= 0) {
+      setQuantidade(s);
+      dispatch(setItem({ 
+        produto: id,
+        quantidade: s,
+        preco 
+      }));
+    }
+  };
+
   return (
     <Card className={classes.root}>
       {foto && (
@@ -62,11 +75,20 @@ export default function ProdutoCard(props) {
       <CardActions disableSpacing>
         {cliente ? (
           <>
-            <IconButton aria-label="remover item do carrinho" className={classes.removeButton}>
+            <IconButton 
+              aria-label="remover item do carrinho" 
+              className={classes.removeButton}
+              onClick={() => updateQuantidade(-1)}
+              disabled={quantidade === 0}
+            >
               <RemoveIcon />
             </IconButton>
             <Typography variant="h6">{quantidade}</Typography>
-            <IconButton aria-label="adicionar item ao carrinho" className={classes.addButton}>
+            <IconButton 
+              aria-label="adicionar item ao carrinho" 
+              className={classes.addButton}
+              onClick={() => updateQuantidade(1)}
+            >
               <AddIcon />
             </IconButton>
           </>
