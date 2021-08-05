@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { 
   CssBaseline,
@@ -11,6 +11,8 @@ import {
 import {
   AccountCircle
 } from '@material-ui/icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchLojaAsync } from './store/acesso';
 
 
 const useStyles = makeStyles(() => ({
@@ -24,6 +26,16 @@ const useStyles = makeStyles(() => ({
 
 function App() {
   const classes = useStyles();
+  const dispatch = useDispatch();
+
+  const nome_loja = useSelector(state => state.acesso.nome_loja);
+  const usuario_id = useSelector(state => state.acesso.id);
+
+  useEffect(() => {
+    const { host } = window.location;
+    const nome_url = host.split('.')[0];
+    dispatch(fetchLojaAsync({ nome_url }));
+  }, [dispatch]);
 
   return (
     <>
@@ -34,12 +46,16 @@ function App() {
             <Typography 
               variant="h6"
               className={classes.title}
-            >Nome da Loja</Typography>
-            <IconButton
-              color="inherit"
             >
-              <AccountCircle />
-            </IconButton>
+              {nome_loja}
+            </Typography>
+            {usuario_id && (
+              <IconButton
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+            )}
           </Toolbar>
         </AppBar>
         <Container>
