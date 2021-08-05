@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { 
@@ -39,8 +39,18 @@ export default function ProdutoCard(props) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const cliente = useSelector(state => state.acesso.role === 'cliente');
+  const quantidadeCarrinho = useSelector(state => {
+    const item = state.comercial.carrinho.find(i => i.produto === id);
+    return item ? item.quantidade : 0;
+  });
 
   const [quantidade, setQuantidade] = useState(0);
+
+  useEffect(() => {
+    if (quantidadeCarrinho > quantidade && quantidade === 0) {
+      setQuantidade(quantidadeCarrinho);
+    }
+  }, [quantidade, quantidadeCarrinho]);
 
   const setProdutotoUpdate = id => {
     dispatch(produtoToUpdate({ id }));
