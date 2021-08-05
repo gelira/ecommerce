@@ -8,6 +8,7 @@ import {
   Typography 
 } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { loginAsync } from '../store/acesso';
 
 const useStyles = makeStyles(theme => ({
@@ -28,6 +29,7 @@ const useStyles = makeStyles(theme => ({
 export default function Login() {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const history = useHistory();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -36,6 +38,10 @@ export default function Login() {
     dispatch(loginAsync({ username, password }));
     setUsername('');
     setPassword('');
+  };
+
+  const navigateRegistro = () => {
+    history.push('/registro');
   };
 
   return (
@@ -78,7 +84,10 @@ export default function Login() {
           <Grid item xs>
           </Grid>
           <Grid item>
-            <Link href="#" variant="body2">
+            <Link 
+              variant="body2"
+              onClick={navigateRegistro}
+            >
               Não tem uma conta? Registre-se aqui!
             </Link>
           </Grid>
