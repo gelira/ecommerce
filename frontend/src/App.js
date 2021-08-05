@@ -1,4 +1,5 @@
 import React from 'react';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import logo from './logo.svg';
 import { Counter } from './features/counter/Counter';
 import './App.css';
@@ -6,6 +7,7 @@ import './App.css';
 function App() {
   return (
     <div className="App">
+      <CssBaseline />
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <Counter />
