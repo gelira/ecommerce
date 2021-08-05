@@ -6,10 +6,7 @@ const initialState = {
   produtos: [],
   
   id: null,
-  nome: '',
-  descricao: '',
-  preco: 0,
-  foto: ''
+  produtoForm: false
 };
 
 export const fetchProdutosAsync = createAsyncThunk(
@@ -20,6 +17,83 @@ export const fetchProdutosAsync = createAsyncThunk(
 
     const response = await api(token, loja_id).get('/produtos');
     return response.data;
+  }
+);
+
+export const uploadFotoProdutoAsync = createAsyncThunk(
+  'estoque/uploadFotoProduto',
+  async (args, { getState }) => {
+    const state = getState();
+    const { token, loja_id } = state.acesso;
+    const { id, foto } = args;
+
+    const data = new FormData();
+    data.append('foto', foto);
+
+    await api(token, loja_id).put(`/produtos/${id}/foto`, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+  }
+);
+
+export const createProdutoAsync = createAsyncThunk(
+  'estoque/createProduto',
+  async (args, { getState, dispatch }) => {
+    const state = getState();
+    const { token, loja_id } = state.acesso;
+    const { nome, descricao, preco, file } = args;
+
+    const { data } = await api(token, loja_id).post('/produtos', {
+      nome,
+      descricao,
+      preco
+    });
+
+    if (file) {
+      await dispatch(uploadFotoProdutoAsync({ id: data.id, foto: file }));
+    }
+  }
+);
+
+export const updateProdutoAsync = createAsyncThunk(
+  'estoque/updateProduto',
+  async (args, { getState, dispatch }) => {
+    const state = getState();
+    const { token, loja_id } = state.acesso;
+    const { id } = state.estoque;
+    const { nome, descricao, preco, file } = args;
+
+    await api(token, loja_id).patch(`/produtos/${id}`, {
+      nome,
+      descricao,
+      preco
+    });
+
+    if (file) {
+      await dispatch(uploadFotoProdutoAsync({ id, foto: file }));
+    }
+  }
+);
+
+export const sendProdutoAsync = createAsyncThunk(
+  'estoque/sendProdutoAsync',
+  async (args, { getState, dispatch }) => {
+    const state = getState();
+    const { id } = state.estoque;
+    const { nome, descricao, preco, file } = args;
+
+    const data = { nome, descricao, preco, file };
+
+    if (id) {
+      await dispatch(updateProdutoAsync(data));
+    }
+    else {
+      await dispatch(createProdutoAsync(data));
+    }
+
+    dispatch(fetchProdutosAsync());
   }
 );
 
@@ -39,6 +113,15 @@ export const estoqueSlice = createSlice({
       state.descricao = produto.descricao;
       state.preco = produto.preco;
       state.foto = produto.foto;
+    },
+    produtoCleanState(state) {
+      state.id = null;
+    },
+    openProdutoForm(state) {
+      state.produtoForm = true;
+    },
+    closeProdutoForm(state) {
+      state.produtoForm = false;
     }
   },
   extraReducers: builder => {
@@ -49,6 +132,11 @@ export const estoqueSlice = createSlice({
   },
 });
 
-export const { produtoToUpdate } = estoqueSlice.actions;
+export const { 
+  produtoToUpdate, 
+  produtoCleanState, 
+  openProdutoForm, 
+  closeProdutoForm 
+} = estoqueSlice.actions;
 
 export default estoqueSlice.reducer;
