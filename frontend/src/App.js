@@ -61,6 +61,10 @@ function App() {
     }
   }, [usuario_id, role, history]);
 
+  useEffect(() => {
+    document.title = nome_loja;
+  }, [nome_loja]);
+
   return (
     <>
       <CssBaseline />
