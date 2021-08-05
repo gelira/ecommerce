@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { 
+  Button,
   Card, 
   CardActions, 
   CardContent, 
@@ -34,6 +35,7 @@ export default function ProdutoCard(props) {
 
   const classes = useStyles();
   const dispatch = useDispatch();
+  const cliente = useSelector(state => state.acesso.role === 'cliente');
 
   const [quantidade, setQuantidade] = useState(0);
 
@@ -41,8 +43,8 @@ export default function ProdutoCard(props) {
     <Card className={classes.root}>
       {foto && (
         <CardMedia
-        className={classes.media}
-        image={foto}
+          className={classes.media}
+          image={foto}
         />
       )}
       <CardHeader title={nome} />
@@ -51,13 +53,19 @@ export default function ProdutoCard(props) {
         <Typography variant="h6">R$ {preco.toFixed(2)}</Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="remover item do carrinho" className={classes.removeButton}>
-          <RemoveIcon />
-        </IconButton>
-        <Typography variant="h6">{quantidade}</Typography>
-        <IconButton aria-label="adicionar item ao carrinho" className={classes.addButton}>
-          <AddIcon />
-        </IconButton>
+        {cliente ? (
+          <>
+            <IconButton aria-label="remover item do carrinho" className={classes.removeButton}>
+              <RemoveIcon />
+            </IconButton>
+            <Typography variant="h6">{quantidade}</Typography>
+            <IconButton aria-label="adicionar item ao carrinho" className={classes.addButton}>
+              <AddIcon />
+            </IconButton>
+          </>
+        ) : (
+          <Button color="primary">Editar produto</Button>
+        )}
       </CardActions>
     </Card>
   );
