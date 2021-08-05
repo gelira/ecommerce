@@ -14,7 +14,7 @@ import {
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 
-import { produtoToUpdate } from '../store/estoque';
+import { produtoToUpdate, openProdutoForm } from '../store/estoque';
 
 const useStyles = makeStyles({
   root: {
@@ -41,7 +41,10 @@ export default function ProdutoCard(props) {
 
   const [quantidade, setQuantidade] = useState(0);
 
-  const setProdutotoUpdate = id => dispatch(produtoToUpdate({ id }));
+  const setProdutotoUpdate = id => {
+    dispatch(produtoToUpdate({ id }));
+    dispatch(openProdutoForm());
+  };
 
   return (
     <Card className={classes.root}>
