@@ -30,7 +30,10 @@ export default function Produtos() {
     <div className={classes.root}>
       {produtos.length > 0 ? (
         produtos.map(produto => (
-          <ProdutoCard produto={produto} />
+          <ProdutoCard
+            key={produto.id} 
+            produto={produto} 
+          />
         ))
       ) : (
         <Typography variant="h5" gutterBottom>
