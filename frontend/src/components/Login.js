@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { 
   Button, 
@@ -7,6 +7,8 @@ import {
   TextField, 
   Typography 
 } from '@material-ui/core';
+import { useDispatch } from 'react-redux';
+import { loginAsync } from '../store/acesso';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -25,6 +27,16 @@ const useStyles = makeStyles(theme => ({
 
 export default function Login() {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const login = event => {
+    event.preventDefault();
+    dispatch(loginAsync({ username, password }));
+    setUsername('');
+    setPassword('');
+  };
 
   return (
     <div className={classes.paper}>
@@ -37,22 +49,20 @@ export default function Login() {
           margin="normal"
           required
           fullWidth
-          id="email"
           label="Email"
-          name="email"
-          autoComplete="email"
           autoFocus
+          value={username}
+          onChange={e => setUsername(e.target.value)}
         />
         <TextField
           variant="outlined"
           margin="normal"
           required
           fullWidth
-          name="password"
           label="Senha"
           type="password"
-          id="password"
-          autoComplete="current-password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
         />
         <Button
           type="submit"
@@ -60,6 +70,7 @@ export default function Login() {
           variant="contained"
           color="primary"
           className={classes.submit}
+          onClick={login}
         >
           Entrar
         </Button>
