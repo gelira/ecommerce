@@ -5,6 +5,7 @@ import { Typography } from '@material-ui/core';
 
 import { fetchProdutosAsync } from '../store/estoque';
 import ProdutoCard from '../components/ProdutoCard';
+import ProdutoForm from '../components/ProdutoForm';
 
 const useStyles = makeStyles({
   root: {
@@ -40,6 +41,7 @@ export default function Produtos() {
           Nenhum produto encontrado
         </Typography>
       )}
+      <ProdutoForm />
     </div>
   );
 }
