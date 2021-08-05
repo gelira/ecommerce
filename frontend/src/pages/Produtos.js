@@ -22,6 +22,7 @@ export default function Produtos() {
   const classes = useStyles();
   const dispatch = useDispatch();
   
+  const dono = useSelector(state => state.acesso.role === 'dono');
   const produtos = useSelector(state => state.estoque.produtos);
 
   useEffect(() => {
@@ -32,13 +33,15 @@ export default function Produtos() {
 
   return (
     <div className={classes.root}>
-      <Button 
-        variant="contained" 
-        color="primary"
-        onClick={openModal}
-      >
-        Cadastrar Produto
-      </Button>
+      {dono && (
+        <Button 
+          variant="contained" 
+          color="primary"
+          onClick={openModal}
+        >
+          Cadastrar Produto
+        </Button>
+      )}
       <div className={classes.container}>
         {produtos.length > 0 ? (
           produtos.map(produto => (
@@ -52,7 +55,7 @@ export default function Produtos() {
             Nenhum produto encontrado
           </Typography>
         )}
-        <ProdutoForm />
+        {dono && <ProdutoForm />}
       </div>
     </div>
   );
