@@ -1,9 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { 
-  Button, 
-  Grid, 
-  Link, 
+  Button,
   TextField, 
   Typography 
 } from '@material-ui/core';
@@ -20,13 +18,13 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Login() {
+export default function Registro() {
   const classes = useStyles();
 
   return (
     <div className={classes.paper}>
       <Typography component="h1" variant="h5">
-        Login
+        Registre-se!
       </Typography>
       <form noValidate>
         <TextField
@@ -34,10 +32,8 @@ export default function Login() {
           margin="normal"
           required
           fullWidth
-          id="email"
-          label="Email"
-          name="email"
-          autoComplete="email"
+          id="nome"
+          label="Nome"
           autoFocus
         />
         <TextField
@@ -45,11 +41,17 @@ export default function Login() {
           margin="normal"
           required
           fullWidth
-          name="password"
+          id="email"
+          label="Email"
+        />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
           label="Senha"
           type="password"
           id="password"
-          autoComplete="current-password"
         />
         <Button
           type="submit"
@@ -58,17 +60,8 @@ export default function Login() {
           color="primary"
           className={classes.submit}
         >
-          Entrar
+          Registrar e Entrar
         </Button>
-        <Grid container>
-          <Grid item xs>
-          </Grid>
-          <Grid item>
-            <Link href="#" variant="body2">
-              Não tem uma conta? Registre-se aqui!
-            </Link>
-          </Grid>
-        </Grid>
       </form>
     </div>
   );
