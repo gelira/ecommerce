@@ -23,6 +23,7 @@ import { fetchLojaAsync } from './store/acesso';
 import Login from './pages/Login';
 import Registro from './pages/Registro';
 import Produtos from './pages/Produtos';
+import Carrinho from './pages/Carrinho';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -84,6 +85,7 @@ export default function App() {
             {exibirCarrinho() && (
               <IconButton
                 color="inherit"
+                onClick={() => history.push('/carrinho')}
               >
                 <Badge color="secondary" badgeContent={quantidadeItens}>
                   <ShoppingCartIcon />
@@ -112,6 +114,9 @@ export default function App() {
             </Route>
             <Route path="/compras">
               <h1>Compras</h1>
+            </Route>
+            <Route path="/carrinho">
+              <Carrinho />
             </Route>
           </Switch>
         </Container>
