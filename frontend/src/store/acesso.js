@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import api from '../api';
 
 const initialState = {
-  token: '',
+  token: localStorage.getItem('token'),
   id: null,
   nome: '',
   email: '',
@@ -76,10 +76,10 @@ export const acessoSlice = createSlice({
         state.email = email;
         state.role = role;
         state.token = token
+
+        localStorage.setItem('token', token);
       });
   },
 });
-
-// export const { increment, decrement, incrementByAmount } = counterSlice.actions;
 
 export default acessoSlice.reducer;
