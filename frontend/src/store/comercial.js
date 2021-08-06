@@ -44,6 +44,19 @@ export const createCompraAsync = createAsyncThunk(
   }
 );
 
+export const updateCompraAsync = createAsyncThunk(
+  'comercial/updateCompra',
+  async (args, { getState }) => {
+    const state = getState();
+    const { token, loja_id } = state.acesso;
+    const { id, status } = args;
+
+    await api(token, loja_id).put(`/compras/${id}`, { status });
+
+    return { id, status };
+  }
+);
+
 export const comercialSlice = createSlice({
   name: 'comercial',
   initialState,
@@ -93,6 +106,17 @@ export const comercialSlice = createSlice({
     builder
       .addCase(fetchComprasAsync.fulfilled, (state, action) => {
         state.compras = action.payload;
+      });
+
+    builder
+      .addCase(updateCompraAsync.fulfilled, (state, action) => {
+        const { id, status } = action.payload;
+        state.compras = state.compras.map(c => {
+          if (c.id === id) {
+            c.status = status;
+          }
+          return c;
+        });
       });
   }
 });
