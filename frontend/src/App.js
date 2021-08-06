@@ -1,16 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { 
-  CssBaseline,
-  Container,
-  AppBar,
-  Toolbar,
-  Typography,
-  IconButton,
-  Badge
-} from '@material-ui/core';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Container from '@material-ui/core/Container';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import Badge from '@material-ui/core/Badge';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import MenuIcon from '@material-ui/icons/Menu';
+
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Switch,
@@ -18,20 +18,24 @@ import {
   useHistory
 } from 'react-router-dom';
 
-import { fetchLojaAsync } from './store/acesso';
+import { cleanLogin, fetchLojaAsync, fetchInfoUsuarioAsync } from './store/acesso';
 
 import Login from './pages/Login';
 import Registro from './pages/Registro';
 import Produtos from './pages/Produtos';
 import Carrinho from './pages/Carrinho';
 import Compras from './pages/Compras';
+import { Menu, MenuItem } from '@material-ui/core';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
   },
   title: {
     flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
   },
 }));
 
@@ -40,10 +44,49 @@ export default function App() {
   const dispatch = useDispatch();
   const history = useHistory();
 
+  const token = useSelector(state => state.acesso.token);
   const nome_loja = useSelector(state => state.acesso.nome_loja);
   const usuario_id = useSelector(state => state.acesso.id);
+  const nome = useSelector(state => state.acesso.nome);
   const role = useSelector(state => state.acesso.role);
   const quantidadeItens = useSelector(state => state.comercial.quantidadeItens);
+
+  const [anchorNavigate, setAnchorNavigate] = useState(null);
+  const [anchorUser, setAnchorUser] = useState(null);
+  const openNavigate = Boolean(anchorNavigate);
+  const openUser = Boolean(anchorUser);
+
+  const handleOpenNavigate = (event) => {
+    setAnchorNavigate(event.currentTarget);
+  };
+
+  const handleCloseNavigate = () => {
+    setAnchorNavigate(null);
+  };
+
+  const handleOpenUser = (event) => {
+    setAnchorUser(event.currentTarget);
+  };
+
+  const handleCloseUser = () => {
+    setAnchorUser(null);
+  };
+
+  const navigateCompras = () => {
+    history.push('/compras');
+    handleCloseNavigate();
+  };
+
+  const navigateProdutos = () => {
+    history.push('/produtos');
+    handleCloseNavigate();
+  };
+
+  const logout = () => {
+    handleCloseUser();
+    dispatch(cleanLogin());
+    history.push('/login');
+  };
 
   useEffect(() => {
     const { host } = window.location;
@@ -52,18 +95,27 @@ export default function App() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (usuario_id && role) {
-      if (role === 'dono') {
-        history.push('/compras');
+    (async function () {
+      try {
+        if (token) {
+          const data = await dispatch(fetchInfoUsuarioAsync({ token })).unwrap();
+          if (data.role === 'dono') {
+            history.push('/compras');
+          }
+          else {
+            history.push('/produtos');
+          }
+        }
+        else {
+          history.push('/login');
+        }
       }
-      else {
-        history.push('/produtos');
+      catch {
+        dispatch(cleanLogin());
+        history.push('/login');
       }
-    }
-    else {
-      history.push('/login');
-    }
-  }, [usuario_id, role, history]);
+    })();
+  }, [token, dispatch, history]);
 
   useEffect(() => {
     document.title = nome_loja;
@@ -77,6 +129,36 @@ export default function App() {
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar>
+            {usuario_id && (
+              <>
+                <IconButton 
+                  edge="start" 
+                  className={classes.menuButton} 
+                  color="inherit" 
+                  onClick={handleOpenNavigate}
+                >
+                  <MenuIcon />
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorNavigate}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={openNavigate}
+                  onClose={handleCloseNavigate}
+                >
+                  <MenuItem onClick={navigateCompras}>{role === 'cliente' ? 'Minhas Compras' : 'Compras'}</MenuItem>
+                  <MenuItem onClick={navigateProdutos}>Produtos</MenuItem>
+                </Menu>
+              </>
+            )}
             <Typography 
               variant="h6"
               className={classes.title}
@@ -94,11 +176,32 @@ export default function App() {
               </IconButton>
             )}
             {usuario_id && (
-              <IconButton
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
+              <>
+                <IconButton
+                  color="inherit"
+                  onClick={handleOpenUser}
+                >
+                  <AccountCircle />
+                </IconButton>
+                <Menu
+                  id="menu-usuario"
+                  anchorEl={anchorUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={openUser}
+                  onClose={handleCloseUser}
+                >
+                  <MenuItem>Olá, {nome}!</MenuItem>
+                  <MenuItem onClick={logout}>Sair</MenuItem>
+                </Menu>
+              </>
             )}
           </Toolbar>
         </AppBar>

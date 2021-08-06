@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import api from '../api';
 
 const initialState = {
-  token: '',
+  token: localStorage.getItem('token'),
   id: null,
   nome: '',
   email: '',
@@ -57,7 +57,17 @@ export const createClienteAsync = createAsyncThunk(
 export const acessoSlice = createSlice({
   name: 'acesso',
   initialState,
-  reducers: {},
+  reducers: {
+    cleanLogin(state) {
+      state.token = null;
+      state.id = null;
+      state.nome = '';
+      state.email = '';
+      state.role = '';
+
+      localStorage.removeItem('token');
+    }
+  },
   extraReducers: builder => {
     builder
       .addCase(fetchLojaAsync.fulfilled, (state, action) => {
@@ -76,10 +86,12 @@ export const acessoSlice = createSlice({
         state.email = email;
         state.role = role;
         state.token = token
+
+        localStorage.setItem('token', token);
       });
   },
 });
 
-// export const { increment, decrement, incrementByAmount } = counterSlice.actions;
+export const { cleanLogin } = acessoSlice.actions;
 
 export default acessoSlice.reducer;
