@@ -18,7 +18,7 @@ import {
   useHistory
 } from 'react-router-dom';
 
-import { fetchLojaAsync } from './store/acesso';
+import { fetchLojaAsync, fetchInfoUsuarioAsync } from './store/acesso';
 
 import Login from './pages/Login';
 import Registro from './pages/Registro';
@@ -40,6 +40,7 @@ export default function App() {
   const dispatch = useDispatch();
   const history = useHistory();
 
+  const token = useSelector(state => state.acesso.token);
   const nome_loja = useSelector(state => state.acesso.nome_loja);
   const usuario_id = useSelector(state => state.acesso.id);
   const role = useSelector(state => state.acesso.role);
@@ -52,18 +53,26 @@ export default function App() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (usuario_id && role) {
-      if (role === 'dono') {
-        history.push('/compras');
+    (async function () {
+      try {
+        if (token) {
+          const data = await dispatch(fetchInfoUsuarioAsync({ token })).unwrap();
+          if (data.role === 'dono') {
+            history.push('/compras');
+          }
+          else {
+            history.push('/produtos');
+          }
+        }
+        else {
+          history.push('/login');
+        }
       }
-      else {
-        history.push('/produtos');
+      catch {
+        history.push('/login');
       }
-    }
-    else {
-      history.push('/login');
-    }
-  }, [usuario_id, role, history]);
+    })();
+  }, [token, dispatch, history]);
 
   useEffect(() => {
     document.title = nome_loja;
