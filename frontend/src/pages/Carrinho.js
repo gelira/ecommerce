@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { createCompraAsync } from '../store/comercial';
+import { createCompraAsync, limparCarrinho } from '../store/comercial';
 import CarrinhoItem from '../components/CarrinhoItem';
 
 const useStyles = makeStyles({
@@ -27,7 +27,11 @@ export default function Carrinho() {
   const valorTotal = useSelector(state => state.comercial.valorTotal);
   const haItens = useSelector(state => state.comercial.quantidadeItens > 0);
 
-  const fecharCompra = () => dispatch(createCompraAsync());
+  const fecharCompra = async () => {
+    await dispatch(createCompraAsync());
+    dispatch(limparCarrinho());
+    history.push('/produtos');
+  };
 
   return (
     <>

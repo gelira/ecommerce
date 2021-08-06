@@ -69,10 +69,15 @@ export const comercialSlice = createSlice({
       state.carrinho = carrinho;
       state.quantidadeItens = quantidadeItens;
       state.valorTotal = valorTotal;
+    },
+    limparCarrinho(state) {
+      state.carrinho = [];
+      state.quantidadeItens = 0;
+      state.valorTotal = 0;
     }
   },
 });
 
-export const { setItem } = comercialSlice.actions;
+export const { setItem, limparCarrinho } = comercialSlice.actions;
 
 export default comercialSlice.reducer;
