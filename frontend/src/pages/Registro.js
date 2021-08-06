@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { 
-  Button,
-  TextField, 
-  Typography 
-} from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 import { useDispatch } from 'react-redux';
 
 import { createClienteAsync } from '../store/acesso';
@@ -27,6 +25,7 @@ const useStyles = makeStyles(theme => ({
 export default function Registro() {
   const classes = useStyles();
   const dispatch = useDispatch();
+
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');

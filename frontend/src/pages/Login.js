@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { 
-  Button, 
-  Grid, 
-  Link, 
-  TextField, 
-  Typography 
-} from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import Link from '@material-ui/core/Link';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { loginAsync } from '../store/acesso';
@@ -30,6 +28,7 @@ export default function Login() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 

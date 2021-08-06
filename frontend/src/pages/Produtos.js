@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, Typography } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 
 import { fetchProdutosAsync, openProdutoForm } from '../store/estoque';
 import ProdutoCard from '../components/ProdutoCard';
