@@ -101,7 +101,7 @@ export const comercialSlice = createSlice({
   initialState,
   reducers: {
     setItem(state, action) {
-      const { produto, quantidade, preco } = action.payload;
+      const { produto, quantidade, preco, foto } = action.payload;
       let carrinho = state.carrinho.slice();
       let quantidadeItens = 0;
       let valorTotal = 0;
@@ -113,7 +113,7 @@ export const comercialSlice = createSlice({
           item.preco = preco;
         } 
         else {
-          carrinho.push({ produto, quantidade, preco });
+          carrinho.push({ produto, quantidade, preco, foto });
         }
       }
       else {

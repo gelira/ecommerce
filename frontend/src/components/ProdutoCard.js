@@ -64,7 +64,8 @@ export default function ProdutoCard(props) {
       dispatch(setItem({ 
         produto: id,
         quantidade: s,
-        preco 
+        preco,
+        foto 
       }));
     }
   };
