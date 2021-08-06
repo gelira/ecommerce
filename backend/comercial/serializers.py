@@ -20,7 +20,6 @@ class ItemRetrieveSerializer(serializers.ModelSerializer):
         return {
             'id': obj.produto.id,
             'nome': obj.produto.nome,
-            'descricao': obj.produto.descricao,
             'foto': obj.produto.get_foto_url()
         }
 

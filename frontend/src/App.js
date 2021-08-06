@@ -7,22 +7,24 @@ import {
   Toolbar,
   Typography,
   IconButton,
+  Badge
 } from '@material-ui/core';
-import {
-  AccountCircle
-} from '@material-ui/icons';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Switch,
   Route,
   useHistory
-} from "react-router-dom";
+} from 'react-router-dom';
 
 import { fetchLojaAsync } from './store/acesso';
 
 import Login from './pages/Login';
 import Registro from './pages/Registro';
 import Produtos from './pages/Produtos';
+import Carrinho from './pages/Carrinho';
+import Compras from './pages/Compras';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -41,6 +43,7 @@ export default function App() {
   const nome_loja = useSelector(state => state.acesso.nome_loja);
   const usuario_id = useSelector(state => state.acesso.id);
   const role = useSelector(state => state.acesso.role);
+  const quantidadeItens = useSelector(state => state.comercial.quantidadeItens);
 
   useEffect(() => {
     const { host } = window.location;
@@ -66,6 +69,8 @@ export default function App() {
     document.title = nome_loja;
   }, [nome_loja]);
 
+  const exibirCarrinho = () => quantidadeItens > 0 && role === 'cliente';
+
   return (
     <>
       <CssBaseline />
@@ -78,6 +83,16 @@ export default function App() {
             >
               {nome_loja}
             </Typography>
+            {exibirCarrinho() && (
+              <IconButton
+                color="inherit"
+                onClick={() => history.push('/carrinho')}
+              >
+                <Badge color="secondary" badgeContent={quantidadeItens}>
+                  <ShoppingCartIcon />
+                </Badge>
+              </IconButton>
+            )}
             {usuario_id && (
               <IconButton
                 color="inherit"
@@ -99,7 +114,10 @@ export default function App() {
               <Produtos />
             </Route>
             <Route path="/compras">
-              <h1>Compras</h1>
+              <Compras />
+            </Route>
+            <Route path="/carrinho">
+              <Carrinho />
             </Route>
           </Switch>
         </Container>

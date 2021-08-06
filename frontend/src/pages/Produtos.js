@@ -32,31 +32,34 @@ export default function Produtos() {
   const openModal = () => dispatch(openProdutoForm());
 
   return (
-    <div className={classes.root}>
-      {dono && (
-        <Button 
-          variant="contained" 
-          color="primary"
-          onClick={openModal}
-        >
-          Cadastrar Produto
-        </Button>
-      )}
-      <div className={classes.container}>
-        {produtos.length > 0 ? (
-          produtos.map(produto => (
-            <ProdutoCard
-              key={produto.id} 
-              produto={produto} 
-            />
-          ))
-        ) : (
-          <Typography variant="h5" gutterBottom>
-            Nenhum produto encontrado
-          </Typography>
+    <>
+      <h1>Produtos</h1>
+      <div className={classes.root}>
+        {dono && (
+          <Button 
+            variant="contained" 
+            color="primary"
+            onClick={openModal}
+          >
+            Cadastrar Produto
+          </Button>
         )}
-        {dono && <ProdutoForm />}
+        <div className={classes.container}>
+          {produtos.length > 0 ? (
+            produtos.map(produto => (
+              <ProdutoCard
+                key={produto.id} 
+                produto={produto} 
+              />
+            ))
+          ) : (
+            <Typography variant="h5" gutterBottom>
+              Nenhum produto encontrado
+            </Typography>
+          )}
+          {dono && <ProdutoForm />}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -40,6 +40,11 @@ export default function ProdutoForm() {
   }, [produto]);
 
   const close = () => {
+    setNome('');
+    setDescricao('');
+    setPreco(0);
+    setFoto('');
+    setFile(null);
     dispatch(produtoCleanState());
     dispatch(closeProdutoForm());
   };
