@@ -57,7 +57,17 @@ export const createClienteAsync = createAsyncThunk(
 export const acessoSlice = createSlice({
   name: 'acesso',
   initialState,
-  reducers: {},
+  reducers: {
+    cleanLogin(state) {
+      state.token = null;
+      state.id = null;
+      state.nome = '';
+      state.email = '';
+      state.role = '';
+
+      localStorage.removeItem('token');
+    }
+  },
   extraReducers: builder => {
     builder
       .addCase(fetchLojaAsync.fulfilled, (state, action) => {
@@ -81,5 +91,7 @@ export const acessoSlice = createSlice({
       });
   },
 });
+
+export const { cleanLogin } = acessoSlice.actions;
 
 export default acessoSlice.reducer;

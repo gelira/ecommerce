@@ -18,7 +18,7 @@ import {
   useHistory
 } from 'react-router-dom';
 
-import { fetchLojaAsync, fetchInfoUsuarioAsync } from './store/acesso';
+import { cleanLogin, fetchLojaAsync, fetchInfoUsuarioAsync } from './store/acesso';
 
 import Login from './pages/Login';
 import Registro from './pages/Registro';
@@ -69,6 +69,7 @@ export default function App() {
         }
       }
       catch {
+        dispatch(cleanLogin());
         history.push('/login');
       }
     })();
