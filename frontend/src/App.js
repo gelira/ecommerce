@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
@@ -9,6 +9,8 @@ import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import MenuIcon from '@material-ui/icons/Menu';
+
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Switch,
@@ -23,13 +25,17 @@ import Registro from './pages/Registro';
 import Produtos from './pages/Produtos';
 import Carrinho from './pages/Carrinho';
 import Compras from './pages/Compras';
+import { Menu, MenuItem } from '@material-ui/core';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
   },
   title: {
     flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
   },
 }));
 
@@ -43,6 +49,27 @@ export default function App() {
   const usuario_id = useSelector(state => state.acesso.id);
   const role = useSelector(state => state.acesso.role);
   const quantidadeItens = useSelector(state => state.comercial.quantidadeItens);
+
+  const [anchorNavigate, setAnchorNavigate] = useState(null);
+  const openNavigate = Boolean(anchorNavigate);
+
+  const handleOpenNavigate = (event) => {
+    setAnchorNavigate(event.currentTarget);
+  };
+
+  const handleCloseNavigate = () => {
+    setAnchorNavigate(null);
+  };
+
+  const navigateCompras = () => {
+    history.push('/compras');
+    handleCloseNavigate();
+  };
+
+  const navigateProdutos = () => {
+    history.push('/produtos');
+    handleCloseNavigate();
+  };
 
   useEffect(() => {
     const { host } = window.location;
@@ -85,6 +112,36 @@ export default function App() {
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar>
+            {usuario_id && (
+              <>
+                <IconButton 
+                  edge="start" 
+                  className={classes.menuButton} 
+                  color="inherit" 
+                  onClick={handleOpenNavigate}
+                >
+                  <MenuIcon />
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorNavigate}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={openNavigate}
+                  onClose={handleCloseNavigate}
+                >
+                  <MenuItem onClick={navigateCompras}>{role === 'cliente' ? 'Minhas Compras' : 'Compras'}</MenuItem>
+                  <MenuItem onClick={navigateProdutos}>Produtos</MenuItem>
+                </Menu>
+              </>
+            )}
             <Typography 
               variant="h6"
               className={classes.title}
