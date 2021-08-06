@@ -26,7 +26,7 @@ export default function Produtos() {
   const produtos = useSelector(state => state.estoque.produtos);
 
   useEffect(() => {
-    dispatch(fetchProdutosAsync());
+    setTimeout(() => dispatch(fetchProdutosAsync()), 500);
   }, [dispatch]);
 
   const openModal = () => dispatch(openProdutoForm());

@@ -26,7 +26,7 @@ export default function Compras() {
   });
 
   useEffect(() => {
-    dispatch(fetchComprasAsync());
+    setTimeout(() => dispatch(fetchComprasAsync()), 500);
   }, [dispatch]);
 
   const tabChange = (_, newValue) => setStatus(newValue);
