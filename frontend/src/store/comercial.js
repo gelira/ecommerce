@@ -5,8 +5,21 @@ import api from '../api';
 const initialState = {
   carrinho: [],
   quantidadeItens: 0,
-  valorTotal: 0
+  valorTotal: 0,
+
+  compras: []
 };
+
+export const fetchComprasAsync = createAsyncThunk(
+  'comercial/fetchCompras',
+  async (_, { getState }) => {
+    const state = getState();
+    const { token, loja_id } = state.acesso;
+
+    const { data } = await api(token, loja_id).get('/compras');
+    return data;
+  }
+);
 
 export const createCompraAsync = createAsyncThunk(
   'comercial/createCompra',
@@ -76,6 +89,12 @@ export const comercialSlice = createSlice({
       state.valorTotal = 0;
     }
   },
+  extraReducers: builder => {
+    builder
+      .addCase(fetchComprasAsync.fulfilled, (state, action) => {
+        state.compras = action.payload;
+      });
+  }
 });
 
 export const { setItem, limparCarrinho } = comercialSlice.actions;
