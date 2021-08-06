@@ -1,9 +1,10 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
+import { createCompraAsync } from '../store/comercial';
 import CarrinhoItem from '../components/CarrinhoItem';
 
 const useStyles = makeStyles({
@@ -20,10 +21,13 @@ const useStyles = makeStyles({
 export default function Carrinho() {
   const classes = useStyles();
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const carrinho = useSelector(state => state.comercial.carrinho);
   const valorTotal = useSelector(state => state.comercial.valorTotal);
   const haItens = useSelector(state => state.comercial.quantidadeItens > 0);
+
+  const fecharCompra = () => dispatch(createCompraAsync());
 
   return (
     <>
@@ -50,8 +54,9 @@ export default function Carrinho() {
             <Button
               variant="contained" 
               color="primary" 
+              onClick={fecharCompra}
             >
-              Fechar pedido
+              Fechar compra
             </Button>
           </div>
         </>
