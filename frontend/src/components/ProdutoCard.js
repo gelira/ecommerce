@@ -65,7 +65,8 @@ export default function ProdutoCard(props) {
         produto: id,
         quantidade: s,
         preco,
-        foto 
+        foto,
+        nome 
       }));
     }
   };
