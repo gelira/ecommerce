@@ -38,7 +38,6 @@ export default function Compras() {
         <Tabs
           indicatorColor="primary"
           textColor="primary"
-          variant="scrollable"
           scrollButtons="auto"
           value={status}
           onChange={tabChange}
