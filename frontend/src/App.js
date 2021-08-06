@@ -47,11 +47,14 @@ export default function App() {
   const token = useSelector(state => state.acesso.token);
   const nome_loja = useSelector(state => state.acesso.nome_loja);
   const usuario_id = useSelector(state => state.acesso.id);
+  const nome = useSelector(state => state.acesso.nome);
   const role = useSelector(state => state.acesso.role);
   const quantidadeItens = useSelector(state => state.comercial.quantidadeItens);
 
   const [anchorNavigate, setAnchorNavigate] = useState(null);
+  const [anchorUser, setAnchorUser] = useState(null);
   const openNavigate = Boolean(anchorNavigate);
+  const openUser = Boolean(anchorUser);
 
   const handleOpenNavigate = (event) => {
     setAnchorNavigate(event.currentTarget);
@@ -59,6 +62,14 @@ export default function App() {
 
   const handleCloseNavigate = () => {
     setAnchorNavigate(null);
+  };
+
+  const handleOpenUser = (event) => {
+    setAnchorUser(event.currentTarget);
+  };
+
+  const handleCloseUser = () => {
+    setAnchorUser(null);
   };
 
   const navigateCompras = () => {
@@ -69,6 +80,12 @@ export default function App() {
   const navigateProdutos = () => {
     history.push('/produtos');
     handleCloseNavigate();
+  };
+
+  const logout = () => {
+    handleCloseUser();
+    dispatch(cleanLogin());
+    history.push('/login');
   };
 
   useEffect(() => {
@@ -159,11 +176,32 @@ export default function App() {
               </IconButton>
             )}
             {usuario_id && (
-              <IconButton
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
+              <>
+                <IconButton
+                  color="inherit"
+                  onClick={handleOpenUser}
+                >
+                  <AccountCircle />
+                </IconButton>
+                <Menu
+                  id="menu-usuario"
+                  anchorEl={anchorUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={openUser}
+                  onClose={handleCloseUser}
+                >
+                  <MenuItem>Olá, {nome}!</MenuItem>
+                  <MenuItem onClick={logout}>Sair</MenuItem>
+                </Menu>
+              </>
             )}
           </Toolbar>
         </AppBar>
