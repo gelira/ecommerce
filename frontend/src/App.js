@@ -24,6 +24,7 @@ import Login from './pages/Login';
 import Registro from './pages/Registro';
 import Produtos from './pages/Produtos';
 import Carrinho from './pages/Carrinho';
+import Compras from './pages/Compras';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -113,7 +114,7 @@ export default function App() {
               <Produtos />
             </Route>
             <Route path="/compras">
-              <h1>Compras</h1>
+              <Compras />
             </Route>
             <Route path="/carrinho">
               <Carrinho />
