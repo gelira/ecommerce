@@ -21,7 +21,9 @@ export default function Compras() {
 
   const [status, setStatus] = useState('nova');
 
-  const compras = useSelector(state => state.comercial.compras);
+  const compras = useSelector(state => {
+    return state.comercial.compras.filter(c => c.status === status);
+  });
 
   useEffect(() => {
     dispatch(fetchComprasAsync());
@@ -49,7 +51,11 @@ export default function Compras() {
           <Tab value="cancelada" label="Canceladas" />
         </Tabs>
       </Paper>
-      {compras.map(c => <Compra key={c.id} compra={c} />)}
+      {compras.length > 0 ? (
+        compras.map(c => <Compra key={c.id} compra={c} />)
+      ) : (
+        <h1>Nenhuma compra com esse status</h1>
+      )}
     </>
   );
 }
