@@ -4,13 +4,13 @@ from rest_framework.views import (
     Response
 )
 from acesso.serializers import (
-    AccesTokenSerializer,
+    AccessTokenSerializer,
     CreateClienteSerializer,
     InfoSerializer
 )
 
 class AccessTokenView(TokenViewBase):
-    serializer_class = AccesTokenSerializer
+    serializer_class = AccessTokenSerializer
 
 class CreateClienteView(APIView):
     permission_classes = []

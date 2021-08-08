@@ -4,7 +4,7 @@ from rest_framework_simplejwt.tokens import AccessToken
 
 from acesso.models import Usuario
 
-class AccesTokenSerializer(TokenObtainSerializer):
+class AccessTokenSerializer(TokenObtainSerializer):
     def get_token(self):
         token = AccessToken.for_user(self.user)
         return str(token)
