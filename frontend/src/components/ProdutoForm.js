@@ -73,7 +73,7 @@ export default function ProdutoForm() {
         />
         <TextField
           margin="dense"
-          label="Nome do produto"
+          label="Preço do produto"
           type="number"
           min="0"
           step="0.01"
