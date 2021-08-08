@@ -30,6 +30,7 @@ export default function App() {
   const dispatch = useDispatch();
   const history = useHistory();
 
+  const usuario_id = useSelector(state => state.acesso.id);
   const token = useSelector(state => state.acesso.token);
   const nome_loja = useSelector(state => state.acesso.nome_loja);
   const loja_id = useSelector(state => state.acesso.loja_id);
@@ -63,6 +64,12 @@ export default function App() {
       }
     })();
   }, [token, loja_id, dispatch, history]);
+
+  useEffect(() => {
+    if (usuario_id === null) {
+      history.push('/login');
+    }
+  }, [usuario_id, history]);
 
   return (
     <>
