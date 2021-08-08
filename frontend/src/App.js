@@ -16,14 +16,14 @@ import MenuUsuario from './components/MenuUsuario';
 import IconeCarrinho from './components/IconeCarrinho';
 import Rotas from './Rotas';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   root: {
     flexGrow: 1,
   },
   title: {
     flexGrow: 1,
   },
-}));
+});
 
 export default function App() {
   const classes = useStyles();
@@ -32,18 +32,20 @@ export default function App() {
 
   const token = useSelector(state => state.acesso.token);
   const nome_loja = useSelector(state => state.acesso.nome_loja);
+  const loja_id = useSelector(state => state.acesso.loja_id);
 
   useEffect(() => {
-    const { host } = window.location;
-    const nome_url = host.split('.')[0];
+    const nome_url = window.location.host.split('.')[0];
     dispatch(fetchLojaAsync({ nome_url }));
   }, [dispatch]);
+
+  useEffect(() => document.title = nome_loja, [nome_loja]);
 
   useEffect(() => {
     (async function () {
       try {
-        if (token) {
-          const data = await dispatch(fetchInfoUsuarioAsync({ token })).unwrap();
+        if (token && loja_id !== null) {
+          const data = await dispatch(fetchInfoUsuarioAsync({ token, loja_id })).unwrap();
           if (data.role === 'dono') {
             history.push('/compras');
           }
@@ -60,11 +62,7 @@ export default function App() {
         history.push('/login');
       }
     })();
-  }, [token, dispatch, history]);
-
-  useEffect(() => {
-    document.title = nome_loja;
-  }, [nome_loja]);
+  }, [token, loja_id, dispatch, history]);
 
   return (
     <>
