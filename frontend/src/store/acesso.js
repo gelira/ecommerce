@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import api from '../api';
+import { openMensagem } from './controle';
 
 const initialState = {
   token: localStorage.getItem('token'),
@@ -27,30 +28,36 @@ export const fetchLojaAsync = createAsyncThunk(
 export const fetchInfoUsuarioAsync = createAsyncThunk(
   'acesso/fetchInfoUsuario',
   async (args) => {
-    const { token } = args;
-    const { data } = await api(token).get('/info');
-    data.token = token;
+    const { token, loja_id } = args;
+    const { data } = await api(token, loja_id).get('/info');
     return data;
   }
 );
 
 export const loginAsync = createAsyncThunk(
   'acesso/login',
-  async (args, { dispatch }) => {
-    const { username, password } = args;
-    const { data } = await api().post('/token', { username, password });
-    const { token } = data;
-    await dispatch(fetchInfoUsuarioAsync({ token }));
+  async (args, { dispatch, getState }) => {
+    try {
+      const state = getState();
+      const { loja_id } = state.acesso;
+
+      const { username, password } = args;
+      const { data } = await api(null, loja_id).post('/token', { username, password });
+      return data;
+    }
+    catch (e) {
+      dispatch(openMensagem({ mensagem: 'Credenciais inválidas' }));
+      throw e;
+    }
   }
 );
 
 export const createClienteAsync = createAsyncThunk(
   'acesso/createCliente',
-  async (args, { dispatch }) => {
+  async (args) => {
     const { nome, email, senha } = args;
     const { data } = await api().post('/cliente', { nome, email, senha });
-    const { token } = data;
-    await dispatch(fetchInfoUsuarioAsync({ token }));
+    return data;
   }
 );
 
