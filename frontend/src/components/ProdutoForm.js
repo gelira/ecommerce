@@ -24,6 +24,7 @@ export default function ProdutoForm() {
 
   const [nome, setNome] = useState('');
   const [descricao, setDescricao] = useState('');
+  const [precoText, setPrecoText] = useState('0');
   const [preco, setPreco] = useState(0);
   const [foto, setFoto] = useState('');
   const [file, setFile] = useState(null);
@@ -33,13 +34,17 @@ export default function ProdutoForm() {
       setNome(produto.nome);
       setDescricao(produto.descricao);
       setPreco(produto.preco);
+      setPrecoText(produto.preco);
       setFoto(produto.foto);
     }
   }, [produto]);
 
+  useEffect(() => setPreco(Number(precoText)), [precoText]);
+
   const close = () => {
     setNome('');
     setDescricao('');
+    setPrecoText('');
     setPreco(0);
     setFoto('');
     setFile(null);
