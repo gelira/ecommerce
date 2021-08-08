@@ -79,14 +79,25 @@ export const acessoSlice = createSlice({
     
     builder
       .addCase(fetchInfoUsuarioAsync.fulfilled, (state, action) => {
-        const { id, nome, email, role, token } = action.payload;
+        const { id, nome, email, role } = action.payload;
 
         state.id = id;
         state.nome = nome;
         state.email = email;
         state.role = role;
-        state.token = token
+      });
 
+    builder
+      .addCase(loginAsync.fulfilled, (state, action) => {
+        const { token } = action.payload;
+        state.token = token;
+        localStorage.setItem('token', token);
+      });
+
+    builder
+      .addCase(createClienteAsync.fulfilled, (state, action) => {
+        const { token } = action.payload;
+        state.token = token;
         localStorage.setItem('token', token);
       });
   },
