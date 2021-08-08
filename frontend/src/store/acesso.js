@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import api from '../api';
-import { openMensagem } from './controle';
+import { handleError } from './utils';
 
 const initialState = {
   token: localStorage.getItem('token'),
@@ -16,21 +16,33 @@ const initialState = {
 
 export const fetchLojaAsync = createAsyncThunk(
   'acesso/fetchLoja',
-  async (args) => {
-    const { nome_url } = args;
-    const response = await api().get('/loja', {
-      params: { nome_url }
-    });
-    return response.data;
+  async (args, { dispatch }) => {
+    try {
+      const { nome_url } = args;
+      const response = await api().get('/loja', {
+        params: { nome_url }
+      });
+      return response.data;
+    }
+    catch (e) {
+      handleError(e, dispatch);
+      throw e;
+    }
   }
 );
 
 export const fetchInfoUsuarioAsync = createAsyncThunk(
   'acesso/fetchInfoUsuario',
-  async (args) => {
-    const { token, loja_id } = args;
-    const { data } = await api(token, loja_id).get('/info');
-    return data;
+  async (args, { dispatch }) => {
+    try {
+      const { token, loja_id } = args;
+      const { data } = await api(token, loja_id).get('/info');
+      return data;
+    }
+    catch (e) {
+      handleError(e, dispatch);
+      throw e;
+    }
   }
 );
 
@@ -46,7 +58,7 @@ export const loginAsync = createAsyncThunk(
       return data;
     }
     catch (e) {
-      dispatch(openMensagem({ mensagem: 'Credenciais inválidas' }));
+      handleError(e, dispatch);
       throw e;
     }
   }
@@ -54,10 +66,16 @@ export const loginAsync = createAsyncThunk(
 
 export const createClienteAsync = createAsyncThunk(
   'acesso/createCliente',
-  async (args) => {
-    const { nome, email, senha } = args;
-    const { data } = await api().post('/cliente', { nome, email, senha });
-    return data;
+  async (args, { dispatch }) => {
+    try {
+      const { nome, email, senha } = args;
+      const { data } = await api().post('/cliente', { nome, email, senha });
+      return data;
+    }
+    catch (e) {
+      handleError(e, dispatch);
+      throw e;
+    }
   }
 );
 
