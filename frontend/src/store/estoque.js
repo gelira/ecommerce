@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import api from '../api';
+import { isLoading, loaded } from './controle';
 import { handleError } from './utils';
 
 const initialState = {
@@ -14,14 +15,17 @@ export const fetchProdutosAsync = createAsyncThunk(
   'estoque/fetchProdutos',
   async (_, { getState, dispatch }) => {
     try {
+      dispatch(isLoading());
       const state = getState();
       const { token, loja_id } = state.acesso;
   
       const response = await api(token, loja_id).get('/produtos');
+      dispatch(loaded());
       return response.data;
     }
     catch (e) {
       handleError(e, dispatch);
+      dispatch(loaded());
       throw e;
     }
   }
@@ -31,6 +35,7 @@ export const uploadFotoProdutoAsync = createAsyncThunk(
   'estoque/uploadFotoProduto',
   async (args, { getState, dispatch }) => {
     try {
+      dispatch(isLoading());
       const state = getState();
       const { token, loja_id } = state.acesso;
       const { id, foto } = args;
@@ -43,9 +48,11 @@ export const uploadFotoProdutoAsync = createAsyncThunk(
           'Content-Type': 'multipart/form-data'
         }
       });
+      dispatch(loaded());
     }
     catch (e) {
       handleError(e, dispatch);
+      dispatch(loaded());
       throw e;
     }
   }
@@ -55,6 +62,7 @@ export const createProdutoAsync = createAsyncThunk(
   'estoque/createProduto',
   async (args, { getState, dispatch }) => {
     try {
+      dispatch(isLoading());
       const state = getState();
       const { token, loja_id } = state.acesso;
       const { nome, descricao, preco, file } = args;
@@ -64,6 +72,8 @@ export const createProdutoAsync = createAsyncThunk(
         descricao,
         preco
       });
+
+      dispatch(loaded());
   
       if (file) {
         await dispatch(uploadFotoProdutoAsync({ id: data.id, foto: file }));
@@ -71,6 +81,7 @@ export const createProdutoAsync = createAsyncThunk(
     }
     catch (e) {
       handleError(e, dispatch);
+      dispatch(loaded());
       throw e;
     }
   }
@@ -80,6 +91,7 @@ export const updateProdutoAsync = createAsyncThunk(
   'estoque/updateProduto',
   async (args, { getState, dispatch }) => {
     try {
+      dispatch(isLoading());
       const state = getState();
       const { token, loja_id } = state.acesso;
       const { id } = state.estoque;
@@ -91,12 +103,15 @@ export const updateProdutoAsync = createAsyncThunk(
         preco
       });
   
+      dispatch(loaded());
+
       if (file) {
         await dispatch(uploadFotoProdutoAsync({ id, foto: file }));
       }
     }
     catch (e) {
       handleError(e, dispatch);
+      dispatch(loaded());
       throw e;
     }
   }

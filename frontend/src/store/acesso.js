@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import api from '../api';
+import { isLoading, loaded } from './controle';
 import { handleError } from './utils';
 
 const initialState = {
@@ -18,14 +19,17 @@ export const fetchLojaAsync = createAsyncThunk(
   'acesso/fetchLoja',
   async (args, { dispatch }) => {
     try {
+      dispatch(isLoading());
       const { nome_url } = args;
       const response = await api().get('/loja', {
         params: { nome_url }
       });
+      dispatch(loaded());
       return response.data;
     }
     catch (e) {
       handleError(e, dispatch);
+      dispatch(loaded());
       throw e;
     }
   }
@@ -35,12 +39,15 @@ export const fetchInfoUsuarioAsync = createAsyncThunk(
   'acesso/fetchInfoUsuario',
   async (args, { dispatch }) => {
     try {
+      dispatch(isLoading());
       const { token, loja_id } = args;
       const { data } = await api(token, loja_id).get('/info');
+      dispatch(loaded());
       return data;
     }
     catch (e) {
       handleError(e, dispatch);
+      dispatch(loaded());
       throw e;
     }
   }
@@ -50,15 +57,18 @@ export const loginAsync = createAsyncThunk(
   'acesso/login',
   async (args, { dispatch, getState }) => {
     try {
+      dispatch(isLoading());
       const state = getState();
       const { loja_id } = state.acesso;
 
       const { username, password } = args;
       const { data } = await api(null, loja_id).post('/token', { username, password });
+      dispatch(loaded());
       return data;
     }
     catch (e) {
       handleError(e, dispatch);
+      dispatch(loaded());
       throw e;
     }
   }
@@ -68,12 +78,15 @@ export const createClienteAsync = createAsyncThunk(
   'acesso/createCliente',
   async (args, { dispatch }) => {
     try {
+      dispatch(isLoading());
       const { nome, email, senha } = args;
       const { data } = await api().post('/cliente', { nome, email, senha });
+      dispatch(loaded());
       return data;
     }
     catch (e) {
       handleError(e, dispatch);
+      dispatch(loaded());
       throw e;
     }
   }
