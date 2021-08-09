@@ -6,7 +6,12 @@ export function handleError(error, dispatch) {
   if (error.response) {
     if (error.response.status === 401) {
       dispatch(cleanLogin());
-      mensagem = 'Sessão expirada'
+      if (error.response.config.url === '/token') {
+        mensagem = 'Credenciais inválidas';
+      }
+      else {
+        mensagem = 'Sessão expirada';
+      }
     }
     else {
       mensagem = error.response.data.detail || 'Ocorreu um erro na comunicação'
