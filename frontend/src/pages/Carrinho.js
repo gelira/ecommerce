@@ -30,7 +30,7 @@ export default function Carrinho() {
   const fecharCompra = async () => {
     await dispatch(createCompraAsync());
     dispatch(limparCarrinho());
-    history.push('/produtos');
+    history.push('/compras');
   };
 
   return (
