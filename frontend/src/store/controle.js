@@ -2,7 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   mensagem: '',
-  openSnackbar: false
+  openSnackbar: false,
+  loading: false
 };
 
 export const controleSlice = createSlice({
@@ -17,10 +18,21 @@ export const controleSlice = createSlice({
     closeMensagem(state) {
       state.mensagem = '';
       state.openSnackbar = false;
+    },
+    isLoading(state) {
+      state.loading = true;
+    },
+    loaded(state) {
+      state.loading = false;
     }
   }
 });
 
-export const { openMensagem, closeMensagem } = controleSlice.actions;
+export const { 
+  openMensagem, 
+  closeMensagem,
+  isLoading,
+  loaded 
+} = controleSlice.actions;
 
 export default controleSlice.reducer;
