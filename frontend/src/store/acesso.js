@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import api from '../api';
+import { isLoading, loaded } from './controle';
+import { handleError } from './utils';
 
 const initialState = {
   token: localStorage.getItem('token'),
@@ -15,42 +17,78 @@ const initialState = {
 
 export const fetchLojaAsync = createAsyncThunk(
   'acesso/fetchLoja',
-  async (args) => {
-    const { nome_url } = args;
-    const response = await api().get('/loja', {
-      params: { nome_url }
-    });
-    return response.data;
+  async (args, { dispatch }) => {
+    try {
+      dispatch(isLoading());
+      const { nome_url } = args;
+      const response = await api().get('/loja', {
+        params: { nome_url }
+      });
+      dispatch(loaded());
+      return response.data;
+    }
+    catch (e) {
+      handleError(e, dispatch);
+      dispatch(loaded());
+      throw e;
+    }
   }
 );
 
 export const fetchInfoUsuarioAsync = createAsyncThunk(
   'acesso/fetchInfoUsuario',
-  async (args) => {
-    const { token } = args;
-    const { data } = await api(token).get('/info');
-    data.token = token;
-    return data;
+  async (args, { dispatch }) => {
+    try {
+      dispatch(isLoading());
+      const { token, loja_id } = args;
+      const { data } = await api(token, loja_id).get('/info');
+      dispatch(loaded());
+      return data;
+    }
+    catch (e) {
+      handleError(e, dispatch);
+      dispatch(loaded());
+      throw e;
+    }
   }
 );
 
 export const loginAsync = createAsyncThunk(
   'acesso/login',
-  async (args, { dispatch }) => {
-    const { username, password } = args;
-    const { data } = await api().post('/token', { username, password });
-    const { token } = data;
-    await dispatch(fetchInfoUsuarioAsync({ token }));
+  async (args, { dispatch, getState }) => {
+    try {
+      dispatch(isLoading());
+      const state = getState();
+      const { loja_id } = state.acesso;
+
+      const { username, password } = args;
+      const { data } = await api(null, loja_id).post('/token', { username, password });
+      dispatch(loaded());
+      return data;
+    }
+    catch (e) {
+      handleError(e, dispatch);
+      dispatch(loaded());
+      throw e;
+    }
   }
 );
 
 export const createClienteAsync = createAsyncThunk(
   'acesso/createCliente',
   async (args, { dispatch }) => {
-    const { nome, email, senha } = args;
-    const { data } = await api().post('/cliente', { nome, email, senha });
-    const { token } = data;
-    await dispatch(fetchInfoUsuarioAsync({ token }));
+    try {
+      dispatch(isLoading());
+      const { nome, email, senha } = args;
+      const { data } = await api().post('/cliente', { nome, email, senha });
+      dispatch(loaded());
+      return data;
+    }
+    catch (e) {
+      handleError(e, dispatch);
+      dispatch(loaded());
+      throw e;
+    }
   }
 );
 
@@ -79,14 +117,25 @@ export const acessoSlice = createSlice({
     
     builder
       .addCase(fetchInfoUsuarioAsync.fulfilled, (state, action) => {
-        const { id, nome, email, role, token } = action.payload;
+        const { id, nome, email, role } = action.payload;
 
         state.id = id;
         state.nome = nome;
         state.email = email;
         state.role = role;
-        state.token = token
+      });
 
+    builder
+      .addCase(loginAsync.fulfilled, (state, action) => {
+        const { token } = action.payload;
+        state.token = token;
+        localStorage.setItem('token', token);
+      });
+
+    builder
+      .addCase(createClienteAsync.fulfilled, (state, action) => {
+        const { token } = action.payload;
+        state.token = token;
         localStorage.setItem('token', token);
       });
   },

@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import api from '../api';
+import { isLoading, loaded } from './controle';
+import { handleError } from './utils';
 
 const initialState = {
   carrinho: [],
@@ -12,48 +14,75 @@ const initialState = {
 
 export const fetchComprasAsync = createAsyncThunk(
   'comercial/fetchCompras',
-  async (_, { getState }) => {
-    const state = getState();
-    const { token, loja_id } = state.acesso;
-
-    const { data } = await api(token, loja_id).get('/compras');
-    return data;
+  async (_, { getState, dispatch }) => {
+    try {
+      dispatch(isLoading());
+      const state = getState();
+      const { token, loja_id } = state.acesso;
+  
+      const { data } = await api(token, loja_id).get('/compras');
+      dispatch(loaded());
+      return data;
+    }
+    catch (e) {
+      handleError(e, dispatch);
+      dispatch(loaded());
+      throw e;
+    }
   }
 );
 
 export const createCompraAsync = createAsyncThunk(
   'comercial/createCompra',
-  async (_, { getState }) => {
-    const state = getState();
-    const { token, loja_id, id } = state.acesso;
-    const { carrinho } = state.comercial;
-
-    const data = {
-      cliente: id,
-      itens: []
-    };
-
-    for (const item of carrinho) {
-      data.itens.push({
-        produto: item.produto,
-        quantidade: item.quantidade
-      });
+  async (_, { getState, dispatch }) => {
+    try {
+      dispatch(isLoading());
+      const state = getState();
+      const { token, loja_id, id } = state.acesso;
+      const { carrinho } = state.comercial;
+  
+      const data = {
+        cliente: id,
+        itens: []
+      };
+  
+      for (const item of carrinho) {
+        data.itens.push({
+          produto: item.produto,
+          quantidade: item.quantidade
+        });
+      }
+  
+      await api(token, loja_id).post('/compras', data);
+      dispatch(loaded());
     }
-
-    await api(token, loja_id).post('/compras', data);
+    catch (e) {
+      handleError(e, dispatch);
+      dispatch(loaded());
+      throw e;
+    }
   }
 );
 
 export const updateCompraAsync = createAsyncThunk(
   'comercial/updateCompra',
-  async (args, { getState }) => {
-    const state = getState();
-    const { token, loja_id } = state.acesso;
-    const { id, status } = args;
-
-    await api(token, loja_id).put(`/compras/${id}`, { status });
-
-    return { id, status };
+  async (args, { getState, dispatch }) => {
+    try {
+      dispatch(isLoading());
+      const state = getState();
+      const { token, loja_id } = state.acesso;
+      const { id, status } = args;
+  
+      await api(token, loja_id).put(`/compras/${id}`, { status });
+      dispatch(loaded());
+  
+      return { id, status };
+    }
+    catch (e) {
+      handleError(e, dispatch);
+      dispatch(loaded());
+      throw e;
+    }
   }
 );
 

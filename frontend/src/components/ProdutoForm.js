@@ -24,6 +24,7 @@ export default function ProdutoForm() {
 
   const [nome, setNome] = useState('');
   const [descricao, setDescricao] = useState('');
+  const [precoText, setPrecoText] = useState('0');
   const [preco, setPreco] = useState(0);
   const [foto, setFoto] = useState('');
   const [file, setFile] = useState(null);
@@ -33,13 +34,17 @@ export default function ProdutoForm() {
       setNome(produto.nome);
       setDescricao(produto.descricao);
       setPreco(produto.preco);
+      setPrecoText(produto.preco);
       setFoto(produto.foto);
     }
   }, [produto]);
 
+  useEffect(() => setPreco(Number(precoText)), [precoText]);
+
   const close = () => {
     setNome('');
     setDescricao('');
+    setPrecoText('');
     setPreco(0);
     setFoto('');
     setFile(null);
@@ -73,16 +78,20 @@ export default function ProdutoForm() {
         />
         <TextField
           margin="dense"
-          label="Nome do produto"
+          label="Preço do produto"
           type="number"
           min="0"
-          step="0.01"
-          value={preco}
-          onChange={e => setPreco(Number(e.target.value))}
+          value={precoText}
+          onChange={e => setPrecoText(e.target.value)}
           fullWidth
         />
         {foto && (
-          <img alt="" src={foto} height="100" />
+          <img 
+            alt="Foto atual do produto"
+            title="Foto atual do produto" 
+            src={foto} 
+            height="100" 
+          />
         )}
         <TextField
           margin="dense"
