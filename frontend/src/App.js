@@ -7,6 +7,7 @@ import Container from '@material-ui/core/Container';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import { cleanLogin, fetchLojaAsync, fetchInfoUsuarioAsync } from './store/acesso';
 
@@ -34,6 +35,7 @@ export default function App() {
   const token = useSelector(state => state.acesso.token);
   const nome_loja = useSelector(state => state.acesso.nome_loja);
   const loja_id = useSelector(state => state.acesso.loja_id);
+  const loading = useSelector(state => state.controle.loading);
 
   useEffect(() => {
     const nome_url = window.location.host.split('.')[0];
@@ -88,6 +90,7 @@ export default function App() {
             <MenuUsuario />
           </Toolbar>
         </AppBar>
+        {loading && <LinearProgress color="secondary" />}
         <Container>
           <Rotas />
         </Container>
